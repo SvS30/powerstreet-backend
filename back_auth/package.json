@@ -1,0 +1,31 @@
+{
+  "name": "back_auth",
+  "version": "1.0.0",
+  "author": "salimv",
+  "description": "Microservicio de autenticación en prueba tecnica de PowerStreet.",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/SvS30/powerstreet-backend#readme",
+  "bugs": {
+    "url": "https://github.com/SvS30/powerstreet-backend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SvS30/powerstreet-backend.git"
+  },
+  "keywords": [
+    "microservice",
+    "expressjs",
+    "mongodb",
+    "redis"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  }
+}
