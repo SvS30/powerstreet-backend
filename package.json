@@ -1,0 +1,25 @@
+{
+  "name": "powerstreet-backend",
+  "version": "1.0.0",
+  "author": "salimv",
+  "description": "Aplicación para documentación en línea Markdown usando microservicios.",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/SvS30/powerstreet-backend#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SvS30/powerstreet-backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SvS30/powerstreet-backend/issues"
+  },
+  "keywords": [
+    "microservices",
+    "expressjs",
+    "vuejs",
+    "mongodb",
+    "redis"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
