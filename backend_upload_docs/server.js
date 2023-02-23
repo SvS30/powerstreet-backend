@@ -1,11 +1,13 @@
 const express = require("express"),
     dotenv = require("dotenv"),
+    { createServer } = require('http'),
     bodyParser = require('body-parser'),
     cors = require('cors'),
     info = require('./package');
 
 const clientMongoDB = require('./conf/mongodb'),
-    docsRouter = require('./routes/docs');
+    docsRouter = require('./routes/docs'),
+    SocketSingleton = require("./utils/sockets");
 
 const app = express();
 
@@ -15,7 +17,7 @@ dotenv.config({ path: '.env' })
 app.use(bodyParser.json())
 // Set CORS config to VueJS
 app.use(cors({
-    origin: 'http://localhost:8080'
+    origin: 'http://localhost'
 }))
 
 app.get('/', (req, res) => {
@@ -34,7 +36,10 @@ const PORT = process.env.PORT || 5051;
 clientMongoDB.connect()
     .then((res) => {
         console.log(`MongoDB connection successfully on ${res.options.srvHost}`);
-        app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on http://${HOST}:${PORT}`));
+        let server = createServer(app);
+        SocketSingleton.configure(server)
+        server.listen(PORT, HOST, () => console.log(`Server running in ${process.env.NODE_ENV} mode on http://${HOST}:${PORT}`));
+        // app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on http://${HOST}:${PORT}`));
     })
     .catch((err) => {
         console.error(err);

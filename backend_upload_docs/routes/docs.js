@@ -1,15 +1,22 @@
 const Router = require ('express'),
     docsRouter = Router();
 
-const { getCollection } = require('../utils/db');
+const { getCollection } = require('../utils/db'),
+    SocketSingleton = require('../utils/sockets');
+
+docsRouter.get('/test-socket', () => {
+    SocketSingleton.io.on('connection', (socket) => {
+        console.log(`Client connected: ${socket.id}`)
+        SocketSingleton.io.emit('client:newDoc', `The ${titulo} document was stored successfully`)
+    })
+    res.status(200).json({ 'status': 'OK', 'message': 'MSJ send' })
+})
 
 docsRouter.post('/', async (req, res, next) => {
     const {
         titulo,
         documento,
-        autor,
-        usuario_cambio,
-        nombre_cambio
+        autor
     } = req.body
     let collection = await getCollection();
     let isDocAlreadyRegister = await collection.findOne({ titulo: titulo })
@@ -31,6 +38,7 @@ docsRouter.post('/', async (req, res, next) => {
             }
         }],
     })
+    SocketSingleton.io.emit('client:newDoc', `The ${titulo} document was stored successfully`)
     return res.status(201).json({ 'status': 'OK', 'message': `The ${titulo} document was stored successfully` })
 })
 
