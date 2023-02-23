@@ -1,22 +1,34 @@
 <template>
-  <div>
-    <app-header />
-    <sidebar-menu />
+  <div id="view">
+    <AppHeader />
     <router-view />
-    <app-footer />
+    <AppFooter />
   </div>
+  <VueSidebarMenuAkahon :isMenuOpen="true" :menuItems="menu" :isSearch="false" menuTitle="PowerStreet"
+    profileImg="" profileName="" profileRole="" />
 </template>
 
 <script>
-import AppHeader from "@/components/AppHeader.vue";
-import AppFooter from "@/components/AppFooter.vue";
-import SidebarMenu from "@/components/SidebarMenu.vue";
+import AppHeader from "./layouts/AppHeader.vue";
+import AppFooter from "./layouts/AppFooter.vue";
+import VueSidebarMenuAkahon from "vue-sidebar-menu-akahon";
 
 export default {
+  data() {
+    return {
+      menu: [
+        { link: '/home', name: 'Dashboard', tooltip: 'Dashboard', icon: 'bx-home-alt-2' },
+        { link: '/about', name: 'Documentos', tooltip: 'Documentos', icon: 'bx-file-doc' }
+      ]
+    };
+  },
+  methods: {
+    clickedExit() { console.log('Exit clicked') }
+  },
   components: {
     AppHeader,
     AppFooter,
-    SidebarMenu
+    VueSidebarMenuAkahon
   },
 };
 </script>
