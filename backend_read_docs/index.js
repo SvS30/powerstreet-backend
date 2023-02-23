@@ -4,6 +4,8 @@ const app = require('express')()
     cors = require('cors'),
     info = require('./package');
 
+const clientMongoDB = require('./conf/mongodb');
+
 dotenv.config({ path: '.env' })
 
 // Body parse from application/json
@@ -24,4 +26,12 @@ app.get('/', (req, res) => {
 const HOST = process.env.URI || 'localhost';
 const PORT = process.env.PORT || 5051;
 
-app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on http://${HOST}:${PORT}`));
+clientMongoDB.connect()
+    .then((res) => {
+        console.log(`MongoDB connection successfully on ${res.options.srvHost}`);
+        app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV} mode on http://${HOST}:${PORT}`));
+    }).catch((err) => {
+        console.error(err);
+        clientMongoDB.close();
+        process.exit(1);
+    })
