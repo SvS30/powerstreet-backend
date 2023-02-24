@@ -17,7 +17,7 @@ dotenv.config({ path: '.env' })
 app.use(bodyParser.json())
 // Set CORS config to VueJS
 app.use(cors({
-    origin: 'http://localhost'
+    origin: 'http://localhost:8080'
 }))
 
 app.get('/', (req, res) => {
