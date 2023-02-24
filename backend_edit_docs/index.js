@@ -4,7 +4,8 @@ const app = require('express')(),
     bodyParser = require('body-parser'),
     info = require('./package');
 
-const clientMongoDB = require('./conf/mongodb');
+const clientMongoDB = require('./conf/mongodb')
+    docsRouter = require('./routes/docs');
 
 dotenv.config({ path: '.env' })
 
@@ -20,6 +21,8 @@ app.get('/', (req, res) => {
         'author': info.author
     })
 })
+
+app.use('/api/docs', docsRouter)
 
 const HOST = process.env.URI || 'localhost'
 const PORT = process.env.PORT || 5054
