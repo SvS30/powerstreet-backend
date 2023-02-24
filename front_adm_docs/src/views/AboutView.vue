@@ -4,26 +4,50 @@
     <Card heightCard="100px">
       <div class="btn-group">
         <input id="fileUpload" type="file" ref="doc" hidden="true" @change="readFile">
-        <Button type="btn-secondary" iconName="bx bx-cloud-upload" textButton="Cargar archivo"
-          @click="chooseFile"/>
-        <Button type="btn-warning" iconName="bx bxs-edit-alt" textButton="Editar"
-          @click="changeStatusEditing" />
-        <Button type="btn-primary" iconName="bx bxs-save" textButton="Guardar" />
-        <Button type="btn-danger" iconName="bx bx-undo" textButton="Cancelar" />
+        <Button type="btn-secondary" iconName="bx bx-cloud-upload" textButton="Cargar archivo" @click="chooseFile" />
+        <Button type="btn-warning" iconName="bx bxs-edit-alt" textButton="Editar" @click="changeStatusEditing" />
+        <Button type="btn-primary" iconName="bx bxs-save" textButton="Guardar" @click="sendForm" />
+        <Button type="btn-danger" iconName="bx bx-undo" textButton="Cancelar" @click="this.isEditing = false"/>
       </div>
-      <div v-if="errorInFile" class="item error">
+      <div v-if="errorInFile" class="notify error">
         <h4>{{ errorMessage }}</h4>
       </div>
     </Card>
     <Card heightCard="400px">
       <VueShowdown v-if="isEditing == false" :markdown="contentFile" />
-      <textarea v-else></textarea>
+      <div class="row" v-else>
+        <div class="col-md-6">
+          <div class="input-container ic1">
+            <input id="titulo" class="input" name="titulo" type="text" placeholder=" " v-model="document.titulo" />
+            <div class="cut"></div>
+            <label for="titulo" class="placeholder">Titulo</label>
+          </div>
+          <div class="input-container ic2">
+            <textarea id="documento" rows="10" class="input" name="documento" type="text" placeholder=" "
+              v-model="document.documento"></textarea>
+            <div class="cut"></div>
+            <label for="documento" class="placeholder">Documento</label>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="input-container ic1">
+            <input id="autor_usuario" class="input" type="text" placeholder=" " v-model="document.autor.usuario" />
+            <div class="cut"></div>
+            <label for="autor_usuario" class="placeholder">Autor usuario</label>
+          </div>
+          <div class="input-container ic2">
+            <input id="autor_nombre" class="input" type="text" placeholder=" " v-model="document.autor.nombre" />
+            <div class="cut"></div>
+            <label for="autor_nombre" class="placeholder">Autor nombre</label>
+          </div>
+        </div>
+      </div>
     </Card>
     <Card heightCard="150px">
-      <div class="wrapper">
-        <h4 class="detail">Autor: John Doe</h4>
-        <h4 class="detail">Creado: 2023-02-23</h4>
-        <h4 class="detail">Ultima modificación: 2023-02-23 por Steven Hank</h4>
+      <div class="container">
+        <h4 class="detail">Autor: {{ document.autor.nombre}}</h4>
+        <h4 class="detail">Creado: {{ document.fecha_creacion }}</h4>
+        <h4 class="detail">Ultima modificación: {{ document.historial_cambios[document.historial_cambios.length -1].fecha}} por {{ document.historial_cambios[document.historial_cambios.length -1].autor_cambio.nombre}}</h4>
       </div>
     </Card>
   </div>
@@ -45,7 +69,33 @@ export default {
       file: null,
       contentFile: null,
       errorInFile: false,
-      errorMessage: null
+      errorMessage: null,
+      document: {
+        _id: null,
+        titulo: null,
+        documento: null,
+        autor: {
+          usuario: null,
+          nombre: null
+        },
+        modificado_por: {
+          usuario: null,
+          nombre: null
+        },
+        fecha_creacion: null,
+        fecha_modificacion: null,
+        historial_cambios: [
+          {
+            documento: null,
+            fecha: null,
+            fecha_server: null,
+            autor_cambio: {
+              usuario: null,
+              nombre: null
+            }
+          }
+        ],
+      }
     }
   },
   methods: {
@@ -55,12 +105,13 @@ export default {
     chooseFile() {
       this.errorInFile = false;
       document.getElementById('fileUpload').click();
+      if (!this.errorInFile) this.changeStatusEditing();
     },
     readFile() {
       this.file = this.$refs.doc.files[0];
       const reader = new FileReader();
       if (this.file.name.includes(".md")) {
-        reader.onload = (data) => this.contentFile = data.target.result;
+        reader.onload = (data) => { this.contentFile = data.target.result; this.document.documento = data.target.result; };
         reader.onerror = (err) => {
           console.log(err);
           this.errorMessage = "An error occurred while processing the file content";
@@ -70,7 +121,24 @@ export default {
       } else {
         this.errorMessage = "This file extension is not supported!";
         this.errorInFile = true;
+        setTimeout(() => this.errorInFile = false, 3000);
       }
+    },
+    async sendForm() {
+      const res = await fetch(`${import.meta.env.VITE_URL_UPLOAD_DOCS}/api/docs`, {
+        method: 'POST', headers: { "Content-type": "application/json" }, body: JSON.stringify({
+          titulo: this.document.titulo,
+          documento: this.document.documento,
+          autor: this.document.autor
+        })
+      });
+      const response = await res.json();
+      if (response.status == 'OK') {
+        alert(response.message);
+        this.contentFile = this.document.documento;
+        this.changeStatusEditing();
+      }
+      else console.log(response)
     }
   }
 }
@@ -84,7 +152,7 @@ export default {
   align-items: center;
 }
 
-.wrapper {
+.container {
   display: flex;
   gap: 30%;
   align-items: center;
@@ -95,7 +163,7 @@ export default {
   width: 100%;
 }
 
-.item {
+.notify {
   width: 350px;
   margin: 5px auto 10px auto;
   padding: 10px 20px;
@@ -111,5 +179,132 @@ export default {
 
 #fileUpload {
   display: none;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  gap: 30px;
+}
+
+.col-md-6 {
+  width: 50%;
+  padding: 20px;
+}
+
+.form {
+  background-color: #15172b;
+  border-radius: 20px;
+  box-sizing: border-box;
+  height: 500px;
+  padding: 20px;
+  width: 320px;
+}
+
+.title {
+  color: #eee;
+  font-family: sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  margin-top: 30px;
+}
+
+.subtitle {
+  color: #eee;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.input-container {
+  height: 50px;
+  position: relative;
+  width: 100%;
+}
+
+.ic1 {
+  margin-top: 40px;
+}
+
+.ic2 {
+  margin-top: 30px;
+}
+
+.input {
+  background-color: #d3d3d3;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  font-size: 18px;
+  height: 100%;
+  outline: 0;
+  padding: 4px 20px 0;
+  width: 100%;
+}
+
+.cut {
+  background-color: #a19b9b;
+  border-radius: 10px;
+  height: 20px;
+  left: 20px;
+  position: absolute;
+  top: -20px;
+  transform: translateY(0);
+  transition: transform 200ms;
+  width: 76px;
+}
+
+.cut-short {
+  width: 70px;
+}
+
+.input:focus~.cut,
+.input:not(:placeholder-shown)~.cut {
+  transform: translateY(8px);
+}
+
+.placeholder {
+  color: #65657b;
+  font-family: sans-serif;
+  left: 20px;
+  line-height: 14px;
+  pointer-events: none;
+  position: absolute;
+  transform-origin: 0 50%;
+  transition: transform 200ms, color 200ms;
+  top: 20px;
+}
+
+.input:focus~.placeholder,
+.input:not(:placeholder-shown)~.placeholder {
+  transform: translateY(-30px) translateX(10px) scale(0.75);
+}
+
+.input:not(:placeholder-shown)~.placeholder {
+  color: #808097;
+}
+
+.input:focus~.placeholder {
+  color: #000000;
+}
+
+.submit {
+  background-color: #08d;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  cursor: pointer;
+  font-size: 18px;
+  height: 50px;
+  margin-top: 38px;
+  text-align: center;
+  width: 100%;
+}
+
+.submit:active {
+  background-color: #06b;
 }
 </style>
