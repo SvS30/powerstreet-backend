@@ -1,7 +1,7 @@
 <template>
   <header>
     <img alt="Vue logo" src="../assets/vue.svg" height="50" />
-    <input type="text" name="id" placeholder="Title..." v-model="searchQuery" />
+    <input type="text" class="input-search" name="id" placeholder="Title..." v-model="searchQuery" />
     <nav>
       <div class="wrapper">
         <ul>
@@ -83,7 +83,7 @@ nav ul li {
   margin-left: 1rem;
 }
 
-input {
+.input-search {
   display: block;
   width: 350px;
   margin: 20px 10px;
