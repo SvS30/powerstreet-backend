@@ -12,6 +12,7 @@
     "boxicons": "^2.1.4",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
+    "vue-showdown": "^4.0.0",
     "vue-sidebar-menu-akahon": "^0.1.4"
   },
   "devDependencies": {
