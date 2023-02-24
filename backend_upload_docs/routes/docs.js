@@ -1,5 +1,6 @@
 const Router = require ('express'),
-    docsRouter = Router();
+    docsRouter = Router(),
+    docSchema = require('../models/Doc');
 
 const { getCollection } = require('../utils/db'),
     SocketSingleton = require('../utils/sockets');
@@ -21,6 +22,12 @@ docsRouter.post('/', async (req, res, next) => {
     let collection = await getCollection();
     let isDocAlreadyRegister = await collection.findOne({ titulo: titulo })
     if (isDocAlreadyRegister) return res.status(400).json({ 'status': 'ERROR', 'message': 'A document with this title is already registered' })
+    const errors = docSchema.validate({ titulo, documento, autor })
+    if (errors.length > 0) {
+        let errorsValidators = []
+        errors.forEach(element => errorsValidators.push(String(element).substring(0,40)));
+        return res.status(400).json({ 'status': 'ERROR', errorsValidators });
+    }
     await collection.insertOne({
         titulo,
         documento,
