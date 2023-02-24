@@ -15,8 +15,8 @@
     </nav>
   </header>
   <div class="wrapper" id="container-docs-filtered" v-if="searchQuery">
-    <div class="item doc" v-for="doc in resultQuery" :key="doc">
-      <p>{{ doc.title }}</p>
+    <div class="item doc" v-for="doc in docsFiltered" :key="doc">
+      <p>{{ doc.titulo }}</p>
     </div>
     <div class="item doc">
       <p>New document</p>
@@ -33,48 +33,19 @@ export default {
   data() {
     return {
       searchQuery: null,
-      resources: [
-        { title: "ABE Attendance", uri: "aaaa.com", category: "a", icon: null },
-        {
-          title: "Accounting Services",
-          uri: "aaaa.com",
-          category: "a",
-          icon: null,
-        },
-        { title: "Administration", uri: "aaaa.com", category: "a", icon: null },
-        {
-          title: "Advanced Student Lookup",
-          uri: "bbbb.com",
-          category: "b",
-          icon: null,
-        },
-        { title: "Art & Sciences", uri: "bbbb.com", category: "b", icon: null },
-        {
-          title: "Auxiliares Services",
-          uri: "bbbb.com",
-          category: "b",
-          icon: null,
-        },
-        { title: "Basic Skills", uri: "cccc.com", category: "c", icon: null },
-        {
-          title: "Board of Trustees",
-          uri: "dddd.com",
-          category: "d",
-          icon: null,
-        },
-      ],
+      docsFiltered: []
     };
   },
   computed: {
-    resultQuery() {
+    async resultQuery() {
       if (this.searchQuery) {
-        return this.resources.filter((doc) => {
-          return this.searchQuery
-            .toLowerCase()
-            .split(" ")
-            .every((v) => doc.title.toLowerCase().includes(v));
-        }).slice(0, 4);
-      } else return this.resources;
+        const res = await fetch(`${import.meta.env.VITE_URL_READ_TITLES}/api/docs/filter?title=${this.searchQuery}`, {
+          method: 'POST', headers: { "Content-type": "application/json"}
+        });
+        const response = await res.json();
+        if (response.status == 'OK') this.docsFiltered = response.data;
+        return this.docsFiltered.slice(0,4)
+      }
     },
   },
 };
