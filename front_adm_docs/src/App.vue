@@ -1,38 +1,35 @@
+<script>
+import AppHeader from "./layouts/AppHeader.vue";
+import AppFooter from "./layouts/AppFooter.vue";
+import VueSidebarMenuAkahon from "vue-sidebar-menu-akahon";
+import 'boxicons'
+
+export default {
+  data() {
+    return {
+      menu: [
+        { link: '/', name: 'Dashboard', tooltip: 'Dashboard', icon: 'bx-home' },
+        { link: '/about', name: 'Documentos', tooltip: 'Documentos', icon: 'bx-file' }
+      ]
+    }
+  },
+  components: {
+    AppHeader,
+    AppFooter,
+    VueSidebarMenuAkahon
+  }
+}
+</script>
+
 <template>
   <div id="view">
     <AppHeader />
     <router-view />
     <AppFooter />
   </div>
-  <VueSidebarMenuAkahon :isMenuOpen="true" :menuItems="menu" :isSearch="false" menuTitle="PowerStreet"
-    profileImg="" profileName="" profileRole="" />
+  <VueSidebarMenuAkahon :isMenuOpen="true" :menuItems="menu" :isSearch="false"
+    menuTitle="PowerStreet" profileName="" profileRole="" />
 </template>
-
-<script>
-import AppHeader from "./layouts/AppHeader.vue";
-import AppFooter from "./layouts/AppFooter.vue";
-import VueSidebarMenuAkahon from "vue-sidebar-menu-akahon";
-
-export default {
-  data() {
-    return {
-      menu: [
-        { link: '/home', name: 'Dashboard', tooltip: 'Dashboard', icon: 'bx-home-alt-2' },
-        { link: '/about', name: 'Documentos', tooltip: 'Documentos', icon: 'bx-file-doc' }
-      ]
-    };
-  },
-  methods: {
-    clickedExit() { console.log('Exit clicked') }
-  },
-  components: {
-    AppHeader,
-    AppFooter,
-    VueSidebarMenuAkahon
-  },
-};
-</script>
-
 
 <style>
 #app {
@@ -42,4 +39,5 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+.sidebar.open div.profile { display: none; }
 </style>
