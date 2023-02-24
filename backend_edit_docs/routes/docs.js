@@ -1,6 +1,7 @@
 const Router = require('express'),
     { ObjectId } = require('mongodb'),
-    docsRouter = Router();
+    docsRouter = Router(),
+    docSchema = require('../models/Doc');
 
 const { getCollection } = require('../utils/db');
 
@@ -15,6 +16,12 @@ docsRouter.patch('/:id/edit', async(req, res) => {
         fecha_modificacion,
         historial_cambios
     } = req.body
+    const errors = docSchema.validate({ titulo, documento, modificado_por, fecha_modificacion, historial_cambios })
+    if (errors.length > 0) {
+        let errorsValidators = []
+        errors.forEach(element => errorsValidators.push(String(element).substring(0, 50)));
+        return res.status(400).json({ 'status': 'ERROR', errorsValidators });
+    }
     await collection.findOneAndUpdate({ _id: new ObjectId(req.params['id']) }, {
         $set: {
             "titulo": titulo,
