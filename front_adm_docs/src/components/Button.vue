@@ -1,5 +1,5 @@
 <template>
-    <button class="btn" :class="type"><i :v-if="iconName" :class="iconName" />{{ textButton }}</button>
+    <button class="btn" :class="type" :disabled="isAvailable == false"><i :v-if="iconName" :class="iconName" />{{ textButton }}</button>
 </template>
 
 <script>
@@ -7,7 +7,8 @@ export default {
     props: {
         type: String,
         textButton: String,
-        iconName: String
+        iconName: String,
+        isAvailable: Boolean
     }
 }
 </script>
