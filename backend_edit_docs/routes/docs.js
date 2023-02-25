@@ -22,7 +22,7 @@ docsRouter.patch('/:id/edit', async(req, res) => {
         errors.forEach(element => errorsValidators.push(String(element).substring(0, 50)));
         return res.status(400).json({ 'status': 'ERROR', errorsValidators });
     }
-    await collection.findOneAndUpdate({ _id: new ObjectId(req.params['id']) }, {
+    let resultMongoDB = await collection.findOneAndUpdate({ _id: new ObjectId(req.params['id']) }, {
         $set: {
             "titulo": titulo,
             "documento": documento,
@@ -30,8 +30,8 @@ docsRouter.patch('/:id/edit', async(req, res) => {
             "fecha_modificacion": fecha_modificacion,
             "historial_cambios": historial_cambios 
         }
-    })
-    return res.status(200).json({ 'status': 'OK', 'message': `The ${docFound.titulo} document was updated successfully` })
+    }, { returnDocument: true })
+    return res.status(200).json({ 'status': 'OK', 'message': `The ${docFound.titulo} document was updated successfully`, 'id': resultMongoDB.value._id })
 })
 
 module.exports = docsRouter;
