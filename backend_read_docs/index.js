@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 app.use('/api/docs', docsRouter)
 
 const HOST = process.env.URI || 'localhost';
-const PORT = process.env.PORT || 5051;
+const PORT = process.env.PORT || 5052;
 
 clientMongoDB.connect()
     .then((res) => {
