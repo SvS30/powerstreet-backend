@@ -57,6 +57,7 @@
 import Card from "../components/Card.vue"
 import Button from "../components/Button.vue"
 import { VueShowdown } from "vue-showdown";
+import { useRoute } from 'vue-router'
 export default {
   components: {
     Card,
@@ -96,6 +97,13 @@ export default {
           }
         ],
       }
+    }
+  },
+  beforeMount() {
+    const route = useRoute();
+    if (route.params.id) {
+      this.document._id = route.params.id;
+      this.getDoc();
     }
   },
   methods: {
@@ -139,6 +147,15 @@ export default {
         this.changeStatusEditing();
       }
       else console.log(response)
+    },
+    async getDoc() {
+      const res = await fetch(`${import.meta.env.VITE_URL_READ_DOCS}/api/docs/${this.document._id}`, {
+        method: 'GET',
+        headers: { "Content-type": "application/json" }
+      })
+      const response = await res.json();
+      if (response.status == 'OK') { this.document = response.data; this.contentFile = this.document.documento }
+      else console.log(response);
     }
   }
 }
