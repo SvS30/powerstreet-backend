@@ -7,7 +7,7 @@ Este microservicio se encarga de conectarse a **MongoDB** y almacenar el request
 **Nota**: El documento conserva el formato **markdown**.
 
 ### Schema
-Para realizar el almacenaje de documentos se creo un Schema con la libreria [Validate](https://www.npmjs.com/package/validate)
+Para realizar el almacenaje de documentos se creo el Schema compartido con la libreria [Validate](https://www.npmjs.com/package/validate)
 
 ```json
 {
