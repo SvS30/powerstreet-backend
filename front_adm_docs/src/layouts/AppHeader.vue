@@ -16,10 +16,10 @@
   </header>
   <div class="wrapper" id="container-docs-filtered" v-if="searchQuery">
     <div class="item doc" v-for="doc in docsFiltered" :key="doc">
-      <p @click="this.$router.push('/about/'+doc._id); this.searchQuery = null;">{{ doc.titulo }}</p>
+      <p @click="this.$router.push('/about/'+doc._id).then(() => this.$router.go()); this.searchQuery = null;">{{ doc.titulo }}</p>
     </div>
     <div class="item doc">
-      <p @click="this.$router.push('/about'); this.searchQuery = null;">New document</p>
+      <p @click="this.$router.push('/about').then(() => this.$router.go()); this.searchQuery = null;">New document</p>
     </div>
   </div>
 </template>
