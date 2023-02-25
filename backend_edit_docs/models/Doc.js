@@ -40,7 +40,7 @@ const docSchema = new Schema({
             required: true,
             message: 'Previously updated date is required'
         },
-        fecha: {
+        fecha_server: {
             type: String,
             required: true,
             message: 'Previously updated date is required'
