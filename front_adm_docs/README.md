@@ -1,7 +1,29 @@
-# Vue 3 + Vite
+# Frontend Adm Docs: Vue 3 + Vite
+Frontend para la administracion de documentos en la prueba técnica de PowerStreet.
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Instalación
+1. Instalar dependencias: `npm i`
+2. Clonar archivo de variables de entorno: `cp .env.example .env.local`
+3. Establecer variables de entorno
+    ```
+    VITE_URL_UPLOAD_DOCS= <- URL= URI + PORT donde se esta ejecutando el servicio de carga de documentos
+    VITE_URL_READ_DOCS= <- URL= URI + PORT donde se esta ejecutando el servicio de lectura de documentos
+    VITE_URL_READ_TITLES= <- URL= URI + PORT donde se esta ejecutando el servicio de lectura de titulos de documentos
+    VITE_URL_EDIT_DOCS= <- URL= URI + PORT donde se esta ejecutando el servicio de edicion de documentos
+    ```
 
-## Recommended IDE Setup
+### Issue
+[Vue Sidebar Menu Akahon](https://github.com/akahon/vue-sidebar-menu-akahon): Si tuviese algun problema al levantar el servidor, deberá: 
+- Modificar el archivo `./node_modules/vue-sidebar-menu-akahon/src/components/Sidebar-menu-akahon.vue`
+    ```
+    210 profileImg: {
+    211     type: String,
+    212     default: require('...') <- Esta linea deberá eliminar
+    213 },
+    ```
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+
+## Scripts
+
+### npm run dev
+Este comando levantara el servidor de Vite en modo **desarrollo**.
