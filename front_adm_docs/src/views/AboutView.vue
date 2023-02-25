@@ -1,13 +1,17 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1 v-if="document.titulo">{{document.titulo}}</h1>
     <Card heightCard="100px">
       <div class="btn-group">
         <input id="fileUpload" type="file" ref="doc" hidden="true" @change="readFile">
-        <Button type="btn-secondary" iconName="bx bx-cloud-upload" textButton="Cargar archivo" @click="chooseFile" />
-        <Button type="btn-warning" iconName="bx bxs-edit-alt" textButton="Editar" @click="changeStatusEditing" />
-        <Button type="btn-primary" iconName="bx bxs-save" textButton="Guardar" @click="sendForm" />
-        <Button type="btn-danger" iconName="bx bx-undo" textButton="Cancelar" @click="this.isEditing = false"/>
+        <Button type="btn-secondary" iconName="bx bx-cloud-upload" textButton="Cargar archivo" @click="chooseFile"
+          :isAvailable="true" />
+        <Button type="btn-warning" iconName="bx bxs-edit-alt" textButton="Editar" @click="changeStatusEditing"
+          :isAvailable="!this.isEditing" />
+        <Button type="btn-primary" iconName="bx bxs-save" textButton="Guardar" @click="sendForm"
+          :isAvailable="this.isEditing" />
+        <Button type="btn-danger" iconName="bx bx-undo" textButton="Cancelar" @click="this.isEditing = false"
+          :isAvailable="this.isEditing" />
       </div>
       <div v-if="errorInFile" class="notify error">
         <h4>{{ errorMessage }}</h4>
@@ -16,38 +20,25 @@
     <Card heightCard="400px">
       <VueShowdown v-if="isEditing == false" :markdown="contentFile" />
       <div class="row" v-else>
-        <div class="col-md-6">
-          <div class="input-container ic1">
-            <input id="titulo" class="input" name="titulo" type="text" placeholder=" " v-model="document.titulo" />
-            <div class="cut"></div>
-            <label for="titulo" class="placeholder">Titulo</label>
-          </div>
-          <div class="input-container ic2">
-            <textarea id="documento" rows="10" class="input" name="documento" type="text" placeholder=" "
-              v-model="document.documento"></textarea>
-            <div class="cut"></div>
-            <label for="documento" class="placeholder">Documento</label>
-          </div>
+        <div class="input-container ic1">
+          <input id="titulo" class="input" name="titulo" type="text" placeholder=" " v-model="document.titulo" />
+          <div class="cut"></div>
+          <label for="titulo" class="placeholder">Titulo</label>
         </div>
-        <div class="col-md-6">
-          <div class="input-container ic1">
-            <input id="autor_usuario" class="input" type="text" placeholder=" " v-model="document.autor.usuario" />
-            <div class="cut"></div>
-            <label for="autor_usuario" class="placeholder">Autor usuario</label>
-          </div>
-          <div class="input-container ic2">
-            <input id="autor_nombre" class="input" type="text" placeholder=" " v-model="document.autor.nombre" />
-            <div class="cut"></div>
-            <label for="autor_nombre" class="placeholder">Autor nombre</label>
-          </div>
+        <div class="input-container ic2">
+          <textarea id="documento" rows="10" class="input" name="documento" type="text" placeholder=" "
+            v-model="document.documento"></textarea>
+          <div class="cut"></div>
+          <label for="documento" class="placeholder">Documento</label>
         </div>
       </div>
     </Card>
     <Card heightCard="150px">
       <div class="container">
-        <h4 class="detail">Autor: {{ document.autor.nombre}}</h4>
+        <h4 class="detail">Autor: {{ document.autor.nombre }}</h4>
         <h4 class="detail">Creado: {{ document.fecha_creacion }}</h4>
-        <h4 class="detail">Ultima modificación: {{ document.historial_cambios[document.historial_cambios.length -1].fecha}} por {{ document.historial_cambios[document.historial_cambios.length -1].autor_cambio.nombre}}</h4>
+        <h4 class="detail">Ultima modificación: {{ document.historial_cambios[document.historial_cambios.length
+          - 1].fecha }} por {{ document.historial_cambios[document.historial_cambios.length - 1].autor_cambio.nombre }}</h4>
       </div>
     </Card>
   </div>
@@ -104,6 +95,33 @@ export default {
     if (route.params.id) {
       this.document._id = route.params.id;
       this.getDoc();
+    } else {
+      this.document = {
+        _id: null,
+        titulo: null,
+        documento: null,
+        autor: {
+          usuario: null,
+          nombre: null
+        },
+        modificado_por: {
+          usuario: null,
+          nombre: null
+        },
+        fecha_creacion: null,
+        fecha_modificacion: null,
+        historial_cambios: [
+          {
+            documento: null,
+            fecha: null,
+            fecha_server: null,
+            autor_cambio: {
+              usuario: null,
+              nombre: null
+            }
+          }
+        ],
+      }
     }
   },
   methods: {
@@ -133,20 +151,55 @@ export default {
       }
     },
     async sendForm() {
-      const res = await fetch(`${import.meta.env.VITE_URL_UPLOAD_DOCS}/api/docs`, {
-        method: 'POST', headers: { "Content-type": "application/json" }, body: JSON.stringify({
+      let url, body, method;
+      if (this.document._id != null) {
+        url = `${import.meta.env.VITE_URL_EDIT_DOCS}/api/docs/${this.document._id}/edit`;
+        method = 'PATCH';
+        this.document.historial_cambios.push({
+          documento: this.document.documento,
+          fecha: new Date(),
+          fecha_server: new Date(),
+          autor_cambio: {
+            usuario: 'root_admin',
+            nombre: 'Admin'
+          },
+        })
+        body = JSON.stringify({
           titulo: this.document.titulo,
           documento: this.document.documento,
-          autor: this.document.autor
+          modificado_por: {
+            usuario: 'root_admin',
+            nombre: 'Admin'
+          },
+          fecha_modificacion: new Date(),
+          historial_cambios: this.document.historial_cambios
         })
-      });
+      } else {
+        url = `${import.meta.env.VITE_URL_UPLOAD_DOCS}/api/docs`;
+        method = 'POST';
+        body = JSON.stringify({
+          titulo: this.document.titulo,
+          documento: this.document.documento,
+          autor: {
+            usuario: 'john_dode',
+            nombre: 'John Doe'
+          }
+        })
+      }
+      const res = await fetch(url, { method: method, headers: { "Content-type": "application/json" }, body: body });
       const response = await res.json();
       if (response.status == 'OK') {
-        alert(response.message);
         this.contentFile = this.document.documento;
+        this.document._id = response.id;
+        this.getDoc();
         this.changeStatusEditing();
+        alert(response.message);
+      } else {
+        console.log(response)
+        this.errorMessage = response.message;
+        this.errorInFile = true;
+        setTimeout(() => this.errorInFile = false, 3000);
       }
-      else console.log(response)
     },
     async getDoc() {
       const res = await fetch(`${import.meta.env.VITE_URL_READ_DOCS}/api/docs/${this.document._id}`, {
@@ -202,11 +255,6 @@ export default {
   width: 100%;
   display: flex;
   gap: 30px;
-}
-
-.col-md-6 {
-  width: 50%;
-  padding: 20px;
 }
 
 .form {
@@ -323,5 +371,4 @@ export default {
 
 .submit:active {
   background-color: #06b;
-}
-</style>
+}</style>
