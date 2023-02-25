@@ -6,7 +6,7 @@ const { getCollection } = require('../utils/db');
 docsRouter.post('/filter', async(req, res) => {
     let collection = await getCollection();
     const projection = {
-      _id: 0,
+      _id: 1,
       titulo: 1,
     };
     let docsFiltered = await collection.find({"titulo" : {$regex : req.query.title}}).project(projection).toArray();
