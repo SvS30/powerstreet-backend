@@ -28,7 +28,7 @@ docsRouter.post('/', async (req, res, next) => {
         errors.forEach(element => errorsValidators.push(String(element).substring(0,40)));
         return res.status(400).json({ 'status': 'ERROR', errorsValidators });
     }
-    await collection.insertOne({
+    let resultMongoDB = await collection.insertOne({
         titulo,
         documento,
         autor,
@@ -45,8 +45,8 @@ docsRouter.post('/', async (req, res, next) => {
             }
         }],
     })
-    SocketSingleton.io.emit('client:newDoc', `The ${titulo} document was stored successfully`)
-    return res.status(201).json({ 'status': 'OK', 'message': `The ${titulo} document was stored successfully` })
+    SocketSingleton.io.emit('client:newDoc', `The ${titulo} document was stored successfully`);
+    return res.status(201).json({ 'status': 'OK', 'message': `The ${titulo} document was stored successfully`, 'id': resultMongoDB.insertedId });
 })
 
 module.exports = docsRouter;
