@@ -1,0 +1,241 @@
+{
+	"info": {
+		"_postman_id": "a42234c9-0cc0-4fb2-92cd-c4e39c3b9c47",
+		"name": "PowerStreet",
+		"description": "# PowerStreet\n\nPrueba técnica del **PowerStreet**, hecho en **Microservicios ExpressJS/MongoDB**.\n\n### Problemática\n\nCrear **multiples servicios** para la **administración de documentos en Markdown.**\n\n### Entorno\n\n- NodeJS >= 14.18\n- npm >= 6\n    \n\n### Servicios\n\n- Lectura de documento.\n- Lectura de titulos de documentos.\n- Carga de documentos.\n- Edición de documentos.\n- Autenticación JWT.\n- Frontend Login\n- Frontend administrador de documentos.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6751184"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Auth Me",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjZjMzJkZmEMmU0MmNkODEwODU1YSIsImlhdCI6MTY3NzExNjk1OSwiZXhwIjoxNjc3MTE2OTgzfQ.pJ2Cb1unXFgwV7qIbXKDtUl8xIxbb2MlbH2sDdjiCnI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5050/api/auth/me",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"auth",
+								"me"
+							]
+						},
+						"description": "Get User info through Token"
+					},
+					"response": []
+				},
+				{
+					"name": "Auth Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usuario\": \"salimv\",\r\n    \"pass\": \"302199\",\r\n    \"nombre\": \"Salim\",\r\n    \"ultimo_inicio_sesion\": \"2023-02-22\",\r\n    \"tipo\": \"desarrollo\",\r\n    \"maximo_tiempo_sesion_inactiva\": 24\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5050/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a new user with usuario, pass, etc..."
+					},
+					"response": []
+				},
+				{
+					"name": "Auth Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"usuario\": \"salimv\",\r\n    \"password\": \"302199\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5050/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login with usuario and password"
+					},
+					"response": []
+				}
+			],
+			"description": "Esta colección contiene los requests necesarios de autenticación en el sistema.\n\n### Endpoints\n\n- Registro: `/api/auth/register`\n- Login: `/api/auth/login`\n- Me: `/api/auth/me`"
+		},
+		{
+			"name": "Docs",
+			"item": [
+				{
+					"name": "Store a doc in JSON",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"Project Sample\",\r\n    \"documento\": \"# Project Title\\nA short description about the project and/or client.\\n## Getting Started\\n\\nThese instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system. ### Prerequisites\\nThe things you need before installing the software.\\n* You need this\\n* And you need this\\n* Oh, and don't forget this\",\r\n    \"autor\": {\r\n        \"usuario\": \"salimv\",\r\n        \"nombre\": \"salim\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5051/api/docs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"api",
+								"docs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Docs index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5052/api/docs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5052",
+							"path": [
+								"api",
+								"docs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Docs show",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5052/api/docs/63f7b1f7c797b608dd76ea67",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5052",
+							"path": [
+								"api",
+								"docs",
+								"63f7b1f7c797b608dd76ea67"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Docs filter",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5053/api/docs/filter?title=box",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5053",
+							"path": [
+								"api",
+								"docs",
+								"filter"
+							],
+							"query": [
+								{
+									"key": "title",
+									"value": "box"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Docs update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titulo\": \"Project Sample\",\r\n    \"documento\": \"# Project Title 2\\nA short description about the project and/or client.\\n## Getting Started\\n\\nThese instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system. ### Prerequisites\\nThe things you need before installing the software.\\n* You need this\\n* And you need this\\n* Oh, and don't forget this\",\r\n    \"modificado_por\": {\r\n        \"usuario\": \"admin\",\r\n        \"nombre\": \"Admin\"\r\n    },\r\n    \"fecha_modificacion\": \"2023-02-24T19:15:58.965Z\",\r\n    \"historial_cambios\": [\r\n        {\r\n            \"documento\": \"# Project Title\\nA short description about the project and/or client.\\n## Getting Started\\n\\nThese instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system. ### Prerequisites\\nThe things you need before installing the software.\\n* You need this\\n* And you need this\\n* Oh, and don't forget this\",\r\n            \"fecha\": \"2023-02-23T20:46:24.423+00:00\",\r\n            \"fecha_server\": \"2023-02-23T20:46:24.423+00:00\",\r\n            \"autor_cambio\": {\r\n                \"usuario\": \"salimv\",\r\n                \"nombre\": \"salimv\"\r\n            }\r\n        },\r\n        {\r\n            \"documento\": \"# Project Title 2\\nA short description about the project and/or client.\\n## Getting Started\\n\\nThese instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system. ### Prerequisites\\nThe things you need before installing the software.\\n* You need this\\n* And you need this\\n* Oh, and don't forget this\",\r\n            \"fecha\": \"2023-02-24T19:15:58.965Z\",\r\n            \"fecha_server\": \"2023-02-24T19:15:58.965Z\",\r\n            \"autor_cambio\": {\r\n                \"usuario\": \"admin\",\r\n                \"nombre\": \"admin\"\r\n            }\r\n        }        \r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5054/api/docs/63f907bdd88ed07a63e34beb/edit",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5054",
+							"path": [
+								"api",
+								"docs",
+								"63f907bdd88ed07a63e34beb",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Esta colección contiene los requests para la administración de documentos.\n\n### Endpoints\n\n- Obtener todos los registros: `GET api/docs`\n- Obtener un documento por id: `GET /api/docs/${id}`\n- Filtrar documentos por titulo: `POST /api/docs/filter?title=?`\n- Almacenar nuevo documento: `POST /api/docs`\n- Editar un documento: `PATCH /api/docs/${id}/edit`"
+		}
+	]
+}
