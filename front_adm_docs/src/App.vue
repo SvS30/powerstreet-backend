@@ -9,7 +9,8 @@ export default {
     return {
       menu: [
         { link: '/', name: 'Dashboard', tooltip: 'Dashboard', icon: 'bx-home' },
-        { link: '/about', name: 'Documentos', tooltip: 'Documentos', icon: 'bx-file' }
+        { link: '/about', name: 'Documentos', tooltip: 'Documentos', icon: 'bx-file' },
+        { link: '/sockets', name: 'Sockets', tooltip: 'Sockets', icon: 'bx-signal' }
       ]
     }
   },
