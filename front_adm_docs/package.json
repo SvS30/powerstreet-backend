@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "boxicons": "^2.1.4",
+    "socket.io-client": "^4.7.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
     "vue-showdown": "^4.0.0",
-    "vue-sidebar-menu-akahon": "^0.1.4"
+    "vue-sidebar-menu-akahon": "^0.1.4",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
