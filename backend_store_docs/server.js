@@ -13,7 +13,7 @@ const express = require('express'),
   dotenv = require('dotenv'),
   cors = require('cors'),
   bodyParser = require('body-parser'),
-  // logger = require('morgan'),
+  logger = require('morgan'),
   info = require('./package');
 
 const clientMongoDB = require('./conf/mongodb'),
@@ -21,7 +21,7 @@ const clientMongoDB = require('./conf/mongodb'),
 
 dotenv.config({ path: '.env' })
 
-// app.use(logger('dev'));
+app.use(logger('dev'));
 app.use(bodyParser.json())
 app.use(cors(corsOptions))
 
